@@ -10,11 +10,40 @@ export class EventObject implements EventTarget {
   protected _eventTarget: EventTarget;
 
   constructor(target?: EventTarget) {
-    this._eventTarget = target || document.createDocumentFragment();
+    this._eventTarget = target || document.createElement('div') || document.createDocumentFragment();
+    Object.defineProperty(this._eventTarget, '_eventObject', {
+      value: this
+    });
+  }
+
+  get childEventObjects(): EventObject[] {
+    const target = this._eventTarget as Node;
+    return Array.prototype.concat.apply([], target.childNodes).map((child: Node) => {
+      return child['_eventObject'];
+    });
+  }
+
+  get parentEventObject(): EventObject {
+    const target = this._eventTarget as Node;
+    if(('parentElement' in target) && (target.parentNode !== null) && ('_eventObject' in target.parentNode)) {
+      return target.parentNode['_eventObject'];
+    } else {
+      return null;
+    }
+  }
+
+  appendChild(target: EventObject): EventObject {
+    (this._eventTarget as Node).appendChild(target._eventTarget as Node);
+    return target;
+  }
+
+  removeChild(target: EventObject): EventObject {
+    (this._eventTarget as Node).removeChild(target._eventTarget as Node);
+    return target;
   }
 
   addEventListener(type: string, callback: EventListenerCallback, options?: (EventListenerOptions | boolean)): void {
-    this._eventTarget.addEventListener(type, callback, <any>options);
+    this._eventTarget.addEventListener(type, callback, options as any);
   }
 
   dispatchEvent(event: Event): boolean {
@@ -22,31 +51,7 @@ export class EventObject implements EventTarget {
   };
 
   removeEventListener(type: string, callback: EventListenerCallback, options?: (EventListenerOptions | boolean)): void {
-    this._eventTarget.removeEventListener(type, callback, <any>options);
-  }
-
-  appendChild(target: (EventObject | any)) {
-    if('appendChild' in this._eventTarget) {
-      if(target instanceof EventObject) {
-        (<Element>this._eventTarget).appendChild((<Element>target._eventTarget));
-      } else {
-        (<Element>this._eventTarget).appendChild(target);
-      }
-    } else {
-      throw new Error('Target doen\'t support appendChild');
-    }
-  }
-
-  removeChild(target: (EventObject | any)) {
-    if('removeChild' in this._eventTarget) {
-      if(target instanceof EventObject) {
-        (<Element>this._eventTarget).removeChild((<Element>target._eventTarget));
-      } else {
-        (<Element>this._eventTarget).removeChild(target);
-      }
-    } else {
-      throw new Error('Target doen\'t support removeChild');
-    }
+    this._eventTarget.removeEventListener(type, callback, options as any);
   }
 
 }

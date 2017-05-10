@@ -1,12 +1,15 @@
 {
   "name": "dom-event-object",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Allow any class to have EventTarget methods (addEventListener, removeEventLister and dispatchEvent)",
   "main": "dist/dom-event-object.js",
   "types": "dist/dom-event-object.d.ts",
   "scripts": {
-    "start": "tsc && npm run min",
-    "min": "uglifyjs ./dist/dom-event-object.js --stats -m -o ./dist/dom-event-object.min.js"
+    "start": "npm run build && npm run minimify",
+    "build": "tsc",
+    "minimify": "uglifyjs ./dist/dom-event-object.js --stats -m -o ./dist/dom-event-object.min.js",
+    "test": "mocha ./tests/test.js",
+    "serve": "http-server  ./"
   },
   "repository": {
     "type": "git",
@@ -16,7 +19,10 @@
   "license": "MIT",
   "devDependencies": {
     "typescript": "latest",
-    "uglify-js": "^3.0.1"
+    "uglify-js": "latest",
+    "http-server": "latest",
+    "mocha": "latest",
+    "selenium-webdriver": "latest"
   },
   "dependencies": {}
 }
