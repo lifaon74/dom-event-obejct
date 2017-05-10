@@ -1,0 +1,21 @@
+{
+  "name": "dom-event-object",
+  "version": "1.0.0",
+  "description": "Allow any class to have EventTarget methods (addEventListener, removeEventLister and dispatchEvent)",
+  "main": "dist/dom-event-object.js",
+  "scripts": {
+    "start": "tsc && npm run min",
+    "min": "uglifyjs ./dist/dom-event-object.js --stats -m -o ./dist/dom-event-object.min.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lifaon74/dom-event-obejct"
+  },
+  "author": "valentin",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "latest",
+    "uglify-js": "^3.0.1"
+  },
+  "dependencies": {}
+}
